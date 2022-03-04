@@ -15148,17 +15148,77 @@ module.exports = g;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _moduls_modals__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./moduls/modals */ "./src/js/moduls/modals.js");
-/* harmony import */ var _moduls_tabs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./moduls/tabs */ "./src/js/moduls/tabs.js");
-/* harmony import */ var _slider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./slider */ "./src/js/slider.js");
+/* harmony import */ var _moduls_forms__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./moduls/forms */ "./src/js/moduls/forms.js");
+/* harmony import */ var _moduls_modals__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./moduls/modals */ "./src/js/moduls/modals.js");
+/* harmony import */ var _moduls_tabs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./moduls/tabs */ "./src/js/moduls/tabs.js");
+/* harmony import */ var _slider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./slider */ "./src/js/slider.js");
+
 
 
 
 window.addEventListener('DOMContentLoaded', () => {
-  Object(_moduls_modals__WEBPACK_IMPORTED_MODULE_0__["default"])();
-  Object(_moduls_tabs__WEBPACK_IMPORTED_MODULE_1__["default"])('.glazing_slider', '.glazing_block', '.glazing_content', 'active');
-  Object(_moduls_tabs__WEBPACK_IMPORTED_MODULE_1__["default"])('.decoration_slider', '.no_click', '.decoration_content > div > div', 'after_click');
+  Object(_moduls_modals__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  Object(_moduls_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.glazing_slider', '.glazing_block', '.glazing_content', 'active');
+  Object(_moduls_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.decoration_slider', '.no_click', '.decoration_content > div > div', 'after_click');
+  Object(_moduls_forms__WEBPACK_IMPORTED_MODULE_0__["default"])();
 });
+
+/***/ }),
+
+/***/ "./src/js/moduls/forms.js":
+/*!********************************!*\
+  !*** ./src/js/moduls/forms.js ***!
+  \********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+const forms = () => {
+  const form = document.querySelectorAll('form'),
+        input = document.querySelectorAll('input');
+  const message = {
+    loading: 'Загрузка...',
+    success: 'Спасибо! Скоро мы с вами свяжемся',
+    failure: 'Что-то пошло не так...'
+  };
+
+  const postData = async (url, data) => {
+    document.querySelector('.status').textContent = message.loading;
+    let res = await fetch(url, {
+      method: 'POST',
+      body: data
+    });
+    return await res.text();
+  };
+
+  const clearInputs = () => {
+    clearInputs.forEach(item => {
+      item.value = '';
+    });
+  };
+
+  form.forEach(item => {
+    item.addEventListener('submit', e => {
+      e.preventDefault();
+      let statusMessage = document.createElement('div');
+      statusMessage.classList.add('status');
+      item.appendChild(statusMessage);
+      const formData = new FormData(item);
+      postData('assets/server.php', formData).then(res => {
+        console.log(res);
+        statusMessage.textContent = message.success;
+      }).catch(() => statusMessage.textContent = message.failure).finally(() => {
+        clearInputs();
+        setTimeout(() => {
+          statusMessage.remove();
+        }, 5000);
+      });
+    });
+  });
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (forms);
 
 /***/ }),
 
